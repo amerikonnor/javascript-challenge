@@ -50,13 +50,17 @@ var fields = [['datetime',dateField], ['city', cityField], ['state',stateField],
 
 function UFOfilter(){
 
-    //array to hold filtered data
+    //array to hold final filtered data
     var filteredData = [];
+
+    //array that holds the data after each filtering step
+    var trackingData = tableData;
 
     //setting a boolean that will change to true if the user entered anything
     thereWasInput = false;
     //loop through each field
     fields.forEach(thing =>{
+        
 
         //pull out the column, field name and input value
         var what = thing[0];
@@ -65,13 +69,18 @@ function UFOfilter(){
 
         // check if the user typed anything, and then filter for the value if they did
         if (value !== ''){
+        //reset the filtered data to empty each time
+            filteredData = [];
             thereWasInput = true;
-            tableData.forEach(sighting =>{
+            trackingData.forEach(sighting =>{
                 if(sighting[what] == value){
                     filteredData.push(sighting);
                 };
             });
+            trackingData = filteredData;
         };
+        //save the filtered data for the next time through the loop
+        
     });
 
     //if the user tried to filter, shows the filtered data
