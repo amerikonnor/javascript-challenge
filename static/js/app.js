@@ -21,106 +21,78 @@ function createTable(data){
     });
 };
 
+//on page load this loads the unfiltered table
 createTable(tableData);
 
 
 //FILTER WORK
 
-// making an array to store what filters need to be applied
-var filters = [];
-
-//function to put things into filters, takes in what column needs filtered, and the field for that filter
-function addFilter(what,field){
-
-    //we only want to add it if the field contains a value
-    if (field.property('value') != ''){
-
-        //make sure the value isn't already in there, and then push if we should
-        var push = true;
-        filters.forEach(([filterwhat,field]) =>{
-            if (filterwhat == what){
-                push = false;
-            };
-        });
-        if (push){
-            filters.push([what, field]);
-        };
-    }
-};
-
-
-//variables for the form, each field, and the button
+//find the form
 var Form = d3.select('form')
 
+//find the filter button
+var Button = d3.select('#filter-btn');
+
+//find the reset button
+var Button = d3.select('reset-btn');
+
+// each input field
 var dateField = d3.select('#datetime');
 var cityField = d3.select('#city');
 var stateField = d3.select('#state');
 var countryField = d3.select('#country');
 var shapeField = d3.select('#shape');
 
-
-var Button = d3.select('button');
-
+// everything i need for the filter
+var fields = [['datetime',dateField], ['city', cityField], ['state',stateField], ['country',countryField], ['shape',shapeField]];
 
 //filter function
 
 function UFOfilter(){
-    if (filters.length == 0){
-        createTable(tableData);
-    }
-    else{
-        filters.forEach(([what,field]) =>{
-            var value = field.property('value');
-            var newData = [];
-            tableData.forEach(sighting => {
+
+    //array to hold filtered data
+    var filteredData = [];
+
+    //setting a boolean that will change to true if the user entered anything
+    thereWasInput = false;
+    //loop through each field
+    fields.forEach(thing =>{
+
+        //pull out the column, field name and input value
+        var what = thing[0];
+        var field = thing[1];
+        var value = field.property('value');
+
+        // check if the user typed anything, and then filter for the value if they did
+        if (value !== ''){
+            thereWasInput = true;
+            tableData.forEach(sighting =>{
                 if(sighting[what] == value){
-                    newData.push(sighting);
+                    filteredData.push(sighting);
                 };
             });
-            createTable(newData);
-        });
-    };
+        };
+    });
+
+    //if the user tried to filter, shows the filtered data
+    if (thereWasInput){
+        createTable(filteredData);
+    }
+    //in case they click the filter button without typing anything, prints the unfiltered data
+    else {
+        createNewTable(tableData);
+    }
 };
-
-
 //don't do anything if they just hit enter in a field. might change this later
 Form.on('submit',function(){
     d3.event.preventDefault();
+    UFOfilter();
 });
 
-//for every field that changes, we make sure that it will get filtered if the field isn't empty
-
-dateField.on('change',function(){
-    console.log(filters);
+d3.selectAll('input').on('change',function(){
     d3.event.preventDefault();
-    addFilter('datetime',dateField);
-    
+    UFOfilter();
 });
-
-cityField.on('change',function(){
-    console.log(filters);
-    d3.event.preventDefault();
-    addFilter('city',cityField)
-});
-
-stateField.on('change',function(){
-    console.log(filters);
-    d3.event.preventDefault();
-    addFilter('state',stateField)
-});
-
-countryField.on('change',function(){
-    console.log(filters);
-    d3.event.preventDefault();
-    addFilter('country',countryField)
-});
-
-shapeField.on('change',function(){
-    console.log(filters);
-    d3.event.preventDefault();
-    addFilter('shape',shapeField)
-});
-
 
 //when the button is clicked, filters the data
 Button.on('click',function(){
@@ -128,9 +100,9 @@ Button.on('click',function(){
     UFOfilter();
 });
 
-//trying something else
-var list = d3.selectAll('li');
-console.log(list);
+
+
+
 
 
 
