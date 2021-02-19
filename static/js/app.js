@@ -42,7 +42,6 @@ var dateButton = d3.select('.button1');
 
 dateForm.on('submit',function(){
     d3.event.preventDefault();
-    UFOfilter('datetime', dateField.property('value'));
 });
 
 dateButton.on('click',function(){
