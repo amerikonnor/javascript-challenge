@@ -31,10 +31,10 @@ createTable(tableData);
 var Form = d3.select('form')
 
 //find the filter button
-var Button = d3.select('#filter-btn');
+var FilterButton = d3.select('#filter-btn');
 
 //find the reset button
-var Button = d3.select('reset-btn');
+var ResetButton = d3.select('#reset-btn');
 
 // each input field
 var dateField = d3.select('#datetime');
@@ -80,26 +80,35 @@ function UFOfilter(){
     }
     //in case they click the filter button without typing anything, prints the unfiltered data
     else {
-        createNewTable(tableData);
+        createTable(tableData);
     }
 };
-//don't do anything if they just hit enter in a field. might change this later
+
+//if they somehow get this event
 Form.on('submit',function(){
     d3.event.preventDefault();
     UFOfilter();
 });
 
-d3.selectAll('input').on('change',function(){
-    d3.event.preventDefault();
-    UFOfilter();
-});
+// they change a single value, this will filter immediately.
+// currently commented out because this gets busy if they want multiple filters
+// d3.selectAll('input').on('change',function(){
+//     d3.event.preventDefault();
+//     UFOfilter();
+// });
 
 //when the button is clicked, filters the data
-Button.on('click',function(){
+FilterButton.on('click',function(){
     d3.event.preventDefault();
     UFOfilter();
 });
 
+//reset button resets the form and filters on the empty form!
+ResetButton.on('click',function(){
+    console.log('reset');
+    this.form.reset();
+    UFOfilter();
+});
 
 
 
