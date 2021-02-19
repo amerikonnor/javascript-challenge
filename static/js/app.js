@@ -23,30 +23,52 @@ function createTable(data){
 
 createTable(tableData);
 
+
+//FILTER WORK
+
+// making an array to store what filters need to be applied
+var filters = [];
+
+//variables for the form, each field, and the button
+var Form = d3.select('form')
+var dateField = d3.select('#datetime');
+var Button = d3.select('button');
+
+
 //filter function
 
-//date filter stuff
-function UFOfilter(onWhat,value){
-    var newData = [];
-    tableData.forEach(sighting => {
-        if(sighting[onWhat] == value){
-            newData.push(sighting);
-        }
+function UFOfilter(){
+    filters.forEach(([what,field]) =>{
+        var value = field.property('value');
+        var newData = [];
+        tableData.forEach(sighting => {
+            if(sighting[what] == value){
+                newData.push(sighting);
+            };
+        });
+        createTable(newData);
     });
-    createTable(newData);
 };
 
-var dateForm = d3.select('#dateform')
-var dateField = d3.select('#datetime');
-var dateButton = d3.select('.button1');
 
-dateForm.on('submit',function(){
+
+Form.on('submit',function(){
     d3.event.preventDefault();
 });
 
-dateButton.on('click',function(){
+dateField.on('change',function(){
+    console.log(filters);
     d3.event.preventDefault();
-    UFOfilter('datetime', dateField.property('value'));
+    if (d3.event.target.value != ''){
+        if (!('datetime' in Object.keys(filters))){
+            filters.push(['datetime', dateField]);
+        };
+    };
+});
+
+Button.on('click',function(){
+    d3.event.preventDefault();
+    UFOfilter();
 });
 
 
