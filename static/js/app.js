@@ -31,7 +31,10 @@ var filters = [];
 
 //variables for the form, each field, and the button
 var Form = d3.select('form')
+
 var dateField = d3.select('#datetime');
+var cityField = d3.select('#city')
+
 var Button = d3.select('button');
 
 
@@ -65,6 +68,17 @@ dateField.on('change',function(){
         };
     };
 });
+
+cityField.on('change',function(){
+    console.log(filters);
+    d3.event.preventDefault();
+    if (d3.event.target.value != ''){
+        if (!('city' in Object.keys(filters))){
+            filters.push(['city', cityField]);
+        };
+    };
+});
+
 
 Button.on('click',function(){
     d3.event.preventDefault();
