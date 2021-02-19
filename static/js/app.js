@@ -36,9 +36,14 @@ function UFOfilter(onWhat,value){
     createTable(newData);
 };
 
-
+var dateForm = d3.select('#dateform')
 var dateField = d3.select('#datetime');
 var dateButton = d3.select('.button1');
+
+dateForm.on('submit',function(){
+    d3.event.preventDefault();
+    UFOfilter('datetime', dateField.property('value'));
+});
 
 dateButton.on('click',function(){
     d3.event.preventDefault();
